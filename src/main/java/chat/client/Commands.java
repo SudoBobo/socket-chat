@@ -6,8 +6,8 @@ import java.util.HashSet;
 public class Commands {
     private static final Commands instance = new Commands();
 
-    static HashSet<String> commandTypes;
-    static HashMap<String, String> commandDescriptions;
+    static public HashSet<String> commandTypes;
+    static public HashMap<String, String> commandDescriptions;
 
     private Commands(){
 
@@ -47,7 +47,7 @@ public class Commands {
         "/text <id> <message>\n" +
                 "/text 3 Hello, it's pizza time! - отправить указанное сообщение в чат id=3\n");
     }
-    
+
     public static Commands getInstance(){
         return instance;
     }
