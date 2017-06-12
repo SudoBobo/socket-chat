@@ -6,10 +6,15 @@ import java.util.HashSet;
 public class Commands {
     private static final Commands instance = new Commands();
 
+    // TODO Слишком громоздко
     static public HashSet<String> commandTypes;
     static public HashMap<String, String> commandDescriptions;
 
+    // TODO Следует сделать этот класс перечислением
     private Commands(){
+
+        commandTypes = new HashSet<String>();
+        commandDescriptions = new HashMap<String, String>();
 
         commandTypes.add("/login");
         commandTypes.add("/info");
@@ -50,5 +55,18 @@ public class Commands {
 
     public static Commands getInstance(){
         return instance;
+    }
+
+    // TODO change name
+    public static boolean exists (String commandType){
+        return commandTypes.contains(commandType);
+    }
+
+    public static String getHelp(){
+        String help = new String();
+        for (String commandType :commandTypes) {
+            help += commandType + " " + commandDescriptions.get(commandType) + "\n";
+        }
+        return help;
     }
 }
