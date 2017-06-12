@@ -15,8 +15,7 @@ class ClientMessageFactory {
         switch (commandType) {
             case "/login":
                 //TODO Сделай нормальное заполнение полей
-                LoginMessage loginMessage = new LoginMessage(tokens[1], tokens[2]);
-                message = loginMessage;
+                message =  new LoginMessage(tokens[1], tokens[2]);
                 break;
             case "/text":
                 // FIXME: пример реализации для простого текстового сообщения
@@ -25,8 +24,7 @@ class ClientMessageFactory {
                 // TODO check "/info " case
                 // userId - user we want to know about
                 Long userId = (tokens.length == 2) ? Long.parseLong(tokens[1]) : senderId;
-                InfoMessage infoMessage = new InfoMessage(userId);
-                message = infoMessage;
+                message = new InfoMessage(userId);
         }
 
         message.setId(1L);
