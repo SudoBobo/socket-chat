@@ -11,8 +11,8 @@ import java.net.Socket;
 
 
 class ClientUnit implements Runnable {
-    final static Logger log = Logger.getLogger(ClientUnit.class);
-    int serverPort;
+    private final static Logger log = Logger.getLogger(ClientUnit.class);
+    private int serverPort;
 
     ClientUnit(int port) {
         serverPort = port;
@@ -21,8 +21,8 @@ class ClientUnit implements Runnable {
     public void run() {
         String address = "127.0.0.1";
         try {
-            InetAddress ipAddress = InetAddress.getByName(address); // создаем объект который отображает вышеописанный IP-адрес.
-            Socket socket = new Socket(ipAddress, serverPort); // создаем сокет используя IP-адрес и порт сервера.
+            InetAddress ipAddress = InetAddress.getByName(address);
+            Socket socket = new Socket(ipAddress, serverPort);
 
             InputStream sin = socket.getInputStream();
             OutputStream sout = socket.getOutputStream();
@@ -32,8 +32,6 @@ class ClientUnit implements Runnable {
 
 
             Gson gson = new Gson();
-//            .registerTypeAdapter(LoginMessage.class, new MessageSerializer())
-//                    .registerTypeAdapter(Message.class, new MessageSerializer()).create();
 
             BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
             String messageString = null;
@@ -46,7 +44,7 @@ class ClientUnit implements Runnable {
                 messageString = keyboard.readLine();
 
                 while (messageString.equals("/help")) {
-                    System.out.println(Commands.getInstance().getHelp());
+                    System.out.println(Commands.getHelp());
                     messageString = keyboard.readLine();
                 }
 
@@ -55,7 +53,6 @@ class ClientUnit implements Runnable {
                     Long myId = 666L;
                     Message message = messageFactory.createMessage(messageString, myId);
 
-//                    String messageJson = gson.toJson(message);
                     String messageJson = gson.toJson(message, Message.class);
                     out.writeObject(messageJson);
                     out.flush();
