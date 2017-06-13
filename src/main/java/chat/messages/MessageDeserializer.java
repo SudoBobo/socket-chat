@@ -3,21 +3,28 @@ package chat.messages;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
+import java.util.HashMap;
 
 public class MessageDeserializer implements JsonDeserializer<Message> {
 
-    static private Gson gson = new Gson();
+    private HashMap<String, Class> messageTypeToClass;
 
     public Message deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context)
             throws JsonParseException {
 
-//        final JsonObject jsonObject = json.getAsJsonObject();
-//        JsonElement typeJson = jsonObject.get("objectTypeString");
-//
-//        Type objectTypeString = gson.fromJson(typeJson, Type.class);
-//        return gson.fromJson(jsonObject, objectTypeString);
+        final JsonObject jsonObject = json.getAsJsonObject();
+        JsonElement typeJson = jsonObject.get("objectTypeString");
+        String objectTypeString = context.deserialize(typeJson, String.class);
 
-        Message message = new LoginMessage("test","passTest");
-        return message;
+        Class messageClass = null;
+        try {
+            // "class actual_class_name" -> "actual_class_name"
+            objectTypeString = objectTypeString.split(" ")[1];
+            messageClass = Class.forName(objectTypeString);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return context.deserialize(jsonObject, messageClass);
     }
 }

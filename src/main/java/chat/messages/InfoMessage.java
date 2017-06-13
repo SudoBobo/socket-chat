@@ -3,12 +3,16 @@ package chat.messages;
 public class InfoMessage extends Message {
     private Long userId;
 
-
     public InfoMessage(){};
     public InfoMessage(Long userId){
         this.userId = userId;
         messageType = MessageType.MSG_INFO;
-        objectTypeString = InfoMessage.class.toString();
+    }
+    public InfoMessage(Long userId, Long senderId, Long id){
+        super(id, senderId);
+
+        messageType = MessageType.MSG_INFO;
+        this.userId = userId;
     }
 
     public void setUserId(Long userId){
@@ -17,5 +21,9 @@ public class InfoMessage extends Message {
 
     public Long getUserId(){
         return userId;
+    }
+
+    public boolean equals(InfoMessage message) {
+        return (super.equals(message) && userId.equals(message.userId));
     }
 }
