@@ -42,7 +42,7 @@ class MessageStringValidator {
     }
 
     private boolean isCommandTypeValid(String commandType) {
-        return Commands.getInstance().exists(commandType);
+        return UserCommands.getInstance().exists(commandType);
     }
 
     private boolean isLoginArgsValid(String[] tokens) {

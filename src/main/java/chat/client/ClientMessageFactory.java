@@ -25,6 +25,7 @@ class ClientMessageFactory {
                 // userId - user we want to know about
                 Long userId = (tokens.length == 2) ? Long.parseLong(tokens[1]) : senderId;
                 message = new InfoMessage(userId);
+                break;
         }
 
         message.setId(1L);

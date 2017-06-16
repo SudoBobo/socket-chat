@@ -1,87 +1,69 @@
 package chat.server;
 
-import chat.User;
 import chat.messages.Message;
-import chat.messages.MessageType;
+import chat.messages.MessageDeserializer;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.net.Socket;
 
 class Session implements Runnable {
-    Socket socket;
-    User user;
-    // Chat chat;
+
+    private CommandHandler commandHandler;
+    private Socket socket;
+    private Gson gson;
+
+    ObjectInputStream in;
+    ObjectOutputStream out;
+
     final static Logger log = Logger.getLogger(Session.class);
 
 
-    public Session(Socket socket) {
+    public Session(Socket socket, CommandHandler commandHandler) {
         this.socket = socket;
-    }
+        this.commandHandler = commandHandler;
 
-    public void run() {
-
+        gson = new GsonBuilder().registerTypeAdapter(Message.class, new MessageDeserializer()).create();
 
         try {
-
             InputStream sin = socket.getInputStream();
             OutputStream sout = socket.getOutputStream();
 
+          in = new ObjectInputStream(sin);
+          out = new ObjectOutputStream(sout);
 
-            ObjectInputStream in = new ObjectInputStream(sin);
-            ObjectOutputStream out = new ObjectOutputStream(sout);
-
-//            Gson gson = new GsonBuilder().registerTypeAdapter(Message.class, new MessageDeserializer())
-//                    .registerTypeAdapter(Message.class, new MessageSerializer()).create();
-
-            Gson gson = new Gson();
-
-            while (true) {
-
-                String messageJson = (String) in.readObject();
-                log.info(messageJson);
-
-                // TODO не работает с типом Message
-                Message message = gson.fromJson(messageJson, Message.class);
-
-                log.info(message.getMessageType());
-                onMessage((Message) in.readObject());
-            }
-
-            // Вот тут пользователь просто подключился, ему надо автоизоваться, мы шлём ему сообщение на авторизацию
-            // Клиент его получает, видит поле для ввода логина/пароля
-            // sendLoginRequest();
-
-
-            // ждём какое-то рельное время, пока придёт ответ
-            // если он не приходит, освобождаем сокет, освобождаем тред
-
-            // если он приходит, переходим в режим обработки ответов, где также есть максималное время ожидания
-
-
-            // Надо добавить освобождение ресурсов
-            // Берем входной и выходной потоки сокета, теперь можем получать и отсылать данные клиенту.
-
-
-            // Конвертируем потоки в другой тип, чтоб легче обрабатывать текстовые сообщения.
         } catch (Exception x) {
             x.printStackTrace();
         }
 
-
     }
 
-    public void send(Message msg) throws IOException {
-        // TODO: Отправить клиенту сообщение
+    public void run() {
+            while (true) {
+                String messageJson = null;
+                try {
+                    messageJson = (String) in.readObject();
+                    Message message = gson.fromJson(messageJson, Message.class);
+                    onMessage(message);
 
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+            }
     }
 
-    public void onMessage(Message msg) {
-        if (msg.getMessageType().equals(MessageType.MSG_LOGIN)){
-            System.out.println("We did it!");
-        } else {
-            System.out.println("Smth went wrong");
-        }
+    public void send(Message message) throws IOException {
+        String messageJson = gson.toJson(message, Message.class);
+        out.writeObject(messageJson);
+        out.flush();
+    }
+
+    public void onMessage(Message message) {
+        commandHandler.execute(this, message);
     }
 }

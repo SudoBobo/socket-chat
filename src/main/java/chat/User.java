@@ -1,23 +1,27 @@
 package chat;
 
-import java.util.UUID;
-
 public class User {
 
-    private String id = createID();
+    private int id;
     private String name;
     private String pass;
 
-    private static long idCounter = 0;
-
-    private static synchronized String createID()
-    {
-        return UUID.randomUUID().toString();
-    }
-
-    public User(String name, String pass) {
+    public User(String name, String pass, int id) {
         this.name = name;
         this.pass = pass;
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getPass() {
+        return pass;
     }
 
     @Override
@@ -27,4 +31,5 @@ public class User {
                 ", pass='" + pass + '\'' +
                 '}';
     }
+
 }
