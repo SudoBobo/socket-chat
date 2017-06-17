@@ -1,4 +1,3 @@
-import chat.User;
 import chat.server.store.ConnectionPool;
 import chat.server.store.UserStore;
 import chat.server.store.UserStoreImpl;
@@ -18,10 +17,6 @@ public class DBTests {
     }
     @Test
     public void userCreationTest(){
-        User newUser = new User();
-        userStore.addUser(newUser);
-        User newUserFromDB = userStore.getUserById()
-
     }
 
     @AfterClass

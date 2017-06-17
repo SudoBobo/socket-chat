@@ -18,7 +18,7 @@ class Session implements Runnable {
     ObjectInputStream in;
     ObjectOutputStream out;
 
-    final static Logger log = Logger.getLogger(Session.class);
+    final static public Logger log = Logger.getLogger(Session.class);
 
 
     public Session(Socket socket, CommandHandler commandHandler) {
@@ -46,6 +46,7 @@ class Session implements Runnable {
                 try {
                     messageJson = (String) in.readObject();
                     Message message = gson.fromJson(messageJson, Message.class);
+                    System.out.println(message.getMessageType().toString());
                     onMessage(message);
 
                 } catch (IOException e) {
@@ -58,8 +59,10 @@ class Session implements Runnable {
     }
 
     public void send(Message message) throws IOException {
-        String messageJson = gson.toJson(message, Message.class);
+        System.out.println(message);
+        String messageJson = gson.toJson(message, message.getClass());
         out.writeObject(messageJson);
+        System.out.println(messageJson);
         out.flush();
     }
 

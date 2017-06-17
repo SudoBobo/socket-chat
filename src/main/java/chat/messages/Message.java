@@ -42,7 +42,7 @@ public class Message {
 
         if (getClass().equals(obj.getClass())) {
             Message message = (Message) obj;
-            return ((senderId.equals(message.senderId)) &&
+            return (
                     messageType.equals(message.messageType) && objectTypeString.equals(message.objectTypeString));
         } else {
             return false;

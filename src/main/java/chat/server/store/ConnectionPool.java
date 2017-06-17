@@ -16,7 +16,7 @@ public class ConnectionPool {
 //    private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/test1";
 
 
-    private static final String url = "jdbc:mysql://localhost:3306/test1?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Europe/Moscow&useSSL=false";
+    private static final String url = "jdbc:mysql://localhost:3306/chat_base?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Europe/Moscow&useSSL=false";
     private static final String user = "root";
     private static final String password = "root";
     private static final String MAX_POOL = "250"; // set your own limit

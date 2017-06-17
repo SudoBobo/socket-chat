@@ -76,6 +76,7 @@ class ClientUnit implements Runnable {
                     send(message);
 
                     String answerJson = (String) in.readObject();
+                    System.out.println(answerJson);
                     Message answer = gson.fromJson(answerJson, Message.class);
                     onMessage(answer);
 
@@ -89,7 +90,7 @@ class ClientUnit implements Runnable {
     }
 
     public void send(Message message) throws IOException {
-        String messageJson = gson.toJson(message, Message.class);
+        String messageJson = gson.toJson(message, message.getClass());
         out.writeObject(messageJson);
         out.flush();
 
@@ -98,6 +99,7 @@ class ClientUnit implements Runnable {
     }
 
     public void onMessage(Message message) {
+
         log.info("Принято сообщение : " + message.getMessageType());
         commandHandler.execute(this, message);
     }

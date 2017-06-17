@@ -1,7 +1,4 @@
-import chat.messages.InfoMessage;
-import chat.messages.LoginMessage;
-import chat.messages.Message;
-import chat.messages.MessageDeserializer;
+import chat.messages.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.junit.AfterClass;
@@ -47,6 +44,15 @@ public class SerializationTests {
         Message infoMessageNew = gson.fromJson(infoJson, Message.class);
 
         assertEquals(infoMessage, infoMessageNew);
+    }
+
+    @Test
+    public void infoResultTest(){
+        Message infoRes = new InfoResultMessage("bobo", 1L);
+        String infoResJson = gson.toJson(infoRes, infoRes.getClass());
+        Message newInfoRes = gson.fromJson(infoResJson, Message.class);
+
+        assertEquals(infoRes,newInfoRes);
     }
 
 

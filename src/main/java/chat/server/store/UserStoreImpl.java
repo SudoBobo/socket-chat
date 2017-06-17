@@ -9,8 +9,8 @@ import java.sql.SQLException;
 public class UserStoreImpl implements UserStore {
     private ConnectionPool connectionPool;
 
-    public static final String SELECT_USER = "SELECT * FROM USER WHERE NAME=? and PASSWORD=?";
-    public static final String SELECT_USER_BY_ID = "SELECT * FROM USER WHERE ID=?";
+    public static final String SELECT_USER = "SELECT * FROM users WHERE login=? and password=?";
+    public static final String SELECT_USER_BY_ID = "SELECT * FROM user WHERE ID=?";
 
     public UserStoreImpl(ConnectionPool connectionPool) {
         this.connectionPool = connectionPool;
@@ -40,7 +40,7 @@ public class UserStoreImpl implements UserStore {
             if (rs.next()) {
                 user = new User(rs.getString(3), rs.getString(4), rs.getInt(2));
             } else {
-                throw new NoSuchUserException(new Throwable("There is no user " + user.getName()));
+                throw new NoSuchUserException(new Throwable("There is no user " + login));
             }
 
             preparedStatement.close();

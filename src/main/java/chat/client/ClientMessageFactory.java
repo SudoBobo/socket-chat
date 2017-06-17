@@ -28,7 +28,7 @@ class ClientMessageFactory {
                 break;
         }
 
-        message.setId(1L);
+
         message.setSenderId(senderId);
 
         return message;

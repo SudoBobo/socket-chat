@@ -32,6 +32,7 @@ public class CommandHandler {
                     answerMessage = new InfoResultMessage(user.getName(), user.getId());
 
                 } catch (UserStoreImpl.NoSuchUserException e) {
+                    session.log.info("fine");
                     answerMessage = new ErrorMessage("Такого пользователя не существует");
                 }
 

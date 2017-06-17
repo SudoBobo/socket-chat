@@ -19,7 +19,7 @@ public class LoginMessage extends Message {
     }
 
     public LoginMessage(String name, String pass, Long id, Long senderId) {
-        super(id, senderId);
+        super(senderId);
 
         this.name = name;
         this.pass = pass;

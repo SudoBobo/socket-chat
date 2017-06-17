@@ -9,7 +9,7 @@ public class InfoMessage extends Message {
         messageType = MessageType.MSG_INFO;
     }
     public InfoMessage(Long userId, Long senderId, Long id){
-        super(id, senderId);
+        super(senderId);
 
         messageType = MessageType.MSG_INFO;
         this.userId = userId;
