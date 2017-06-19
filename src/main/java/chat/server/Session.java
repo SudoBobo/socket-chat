@@ -1,7 +1,8 @@
 package chat.server;
 
+import chat.User;
 import chat.messages.Message;
-import chat.messages.MessageDeserializer;
+import chat.serialization.MessageDeserializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.log4j.Logger;
@@ -11,17 +12,19 @@ import java.net.Socket;
 
 class Session implements Runnable {
 
+    private User currentUser;
     private CommandHandler commandHandler;
     private Socket socket;
     private Gson gson;
 
-    ObjectInputStream in;
-    ObjectOutputStream out;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
 
     final static public Logger log = Logger.getLogger(Session.class);
 
 
     public Session(Socket socket, CommandHandler commandHandler) {
+        currentUser = null;
         this.socket = socket;
         this.commandHandler = commandHandler;
 
@@ -41,7 +44,9 @@ class Session implements Runnable {
     }
 
     public void run() {
-            while (true) {
+        boolean toProceed = true;
+
+            while (toProceed) {
                 String messageJson = null;
                 try {
                     messageJson = (String) in.readObject();
@@ -49,9 +54,18 @@ class Session implements Runnable {
                     System.out.println(message.getMessageType().toString());
                     onMessage(message);
 
-                } catch (IOException e) {
+                } catch (EOFException  e){
+                    log.info("Пользователь закрыл соединение");
+                    toProceed = false;
+                    this.close();
+                }
+                catch (IOException e) {
+                    toProceed = false;
+                    this.close();
                     e.printStackTrace();
                 } catch (ClassNotFoundException e) {
+                    toProceed = false;
+                    this.close();
                     e.printStackTrace();
                 }
 
@@ -68,5 +82,27 @@ class Session implements Runnable {
 
     public void onMessage(Message message) {
         commandHandler.execute(this, message);
+    }
+
+    public void setUser(User user){
+        currentUser = user;
+    }
+
+    public User getUser(){
+        return currentUser;
+    }
+
+    public boolean isAuthorized(){
+        return (currentUser != null);
+    }
+
+    private void close(){
+        try {
+            in.close();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

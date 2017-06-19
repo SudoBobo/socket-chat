@@ -28,7 +28,7 @@ public class CommandHandler {
 
                 try {
                     User user = userStore.getUser(loginMessage.getName(), loginMessage.getPass());
-//                    Session.setUser(user);
+                    session.setUser(user);
                     answerMessage = new InfoResultMessage(user.getName(), user.getId());
 
                 } catch (UserStoreImpl.NoSuchUserException e) {

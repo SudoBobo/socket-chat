@@ -1,9 +1,13 @@
 import chat.messages.*;
+import chat.serialization.MessageDeserializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -53,6 +57,20 @@ public class SerializationTests {
         Message newInfoRes = gson.fromJson(infoResJson, Message.class);
 
         assertEquals(infoRes,newInfoRes);
+    }
+
+    @Test
+    public void createChatTest(){
+        List<Long> usersId = new LinkedList<>();
+        usersId.add(666L);
+        usersId.add(777L);
+        usersId.add(888L);
+
+        Message m1 = new ChatCreateMessage(usersId);
+        String js = gson.toJson(m1, m1.getClass());
+        Message m2 = gson.fromJson(js, Message.class);
+
+        assertEquals(m1, m2);
     }
 
 

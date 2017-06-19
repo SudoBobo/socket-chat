@@ -4,9 +4,9 @@ import chat.messages.ErrorMessage;
 import chat.messages.InfoResultMessage;
 import chat.messages.Message;
 
-public class CommandHandler {
+   class CommandHandler {
 
-    public void execute(ClientUnit clientUnit, Message message) {
+    public void execute(Client client, Message message) {
         System.out.println(message.getMessageType().toString());
 
         switch (message.getMessageType()) {

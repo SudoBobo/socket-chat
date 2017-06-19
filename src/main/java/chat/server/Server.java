@@ -13,7 +13,6 @@ public class Server {
     public static void main(String[] ar) {
 
         try {
-
             ServerSocket serverSocket = new ServerSocket(6666);
             ExecutorService pool = Executors.newFixedThreadPool(2);
 

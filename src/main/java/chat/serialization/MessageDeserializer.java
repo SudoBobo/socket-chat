@@ -1,5 +1,6 @@
-package chat.messages;
+package chat.serialization;
 
+import chat.messages.Message;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
