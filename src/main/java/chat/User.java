@@ -2,11 +2,11 @@ package chat;
 
 public class User {
 
-    private int id;
+    private Integer id;
     private String name;
     private String pass;
 
-    public User(String name, String pass, int id) {
+    public User(String name, String pass, Integer id) {
         this.name = name;
         this.pass = pass;
         this.id = id;
@@ -16,7 +16,7 @@ public class User {
         return name;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -32,4 +32,18 @@ public class User {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null) return false;
+
+
+        if (getClass().equals(obj.getClass())) {
+            User user = (User) obj;
+            return (
+                    name.equals(user.name) && pass.equals(user.pass) && id.equals(user.id));
+        } else {
+            return false;
+        }
+    }
 }

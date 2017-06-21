@@ -1,4 +1,7 @@
-package chat.messages;
+package chat.messages.resultMessages;
+
+import chat.messages.Message;
+import chat.messages.MessageType;
 
 public class ErrorMessage extends Message {
     private String errorMessage;

@@ -1,4 +1,5 @@
 import chat.messages.*;
+import chat.messages.resultMessages.InfoResultMessage;
 import chat.serialization.MessageDeserializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

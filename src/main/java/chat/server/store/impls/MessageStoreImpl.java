@@ -1,7 +1,11 @@
-package chat.server.store;
+package chat.server.store.impls;
 
 import chat.messages.Message;
+import chat.messages.TextMessage;
+import chat.server.store.ConnectionPool;
+import chat.server.store.MessageStore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MessageStoreImpl implements MessageStore {
@@ -16,22 +20,22 @@ public class MessageStoreImpl implements MessageStore {
     }
 
     @Override
-    public List<Long> getChatsByUserId(Long userId) {
+    public List<Integer> getChatsByUserId(Integer userId) {
         return null;
     }
 
     @Override
-    public List<Long> getMessagesFromChat(Long chatId) {
+    public ArrayList<TextMessage> getMessagesFromChat(Long chatId) {
         return null;
     }
 
     @Override
-    public Message getMessageById(Long messageId) {
+    public Message getMessageById(Integer messageId) {
         return null;
     }
 
     @Override
-    public void addMessage(Long chatId, Message message) {
+    public void addMessage(Integer chatId, Message message) {
 
     }
 

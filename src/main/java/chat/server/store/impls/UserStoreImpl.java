@@ -1,6 +1,8 @@
-package chat.server.store;
+package chat.server.store.impls;
 
 import chat.User;
+import chat.server.store.ConnectionPool;
+import chat.server.store.UserStore;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

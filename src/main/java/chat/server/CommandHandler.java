@@ -1,28 +1,53 @@
 package chat.server;
 
+import chat.Chat;
 import chat.User;
 import chat.messages.*;
+import chat.messages.resultMessages.ChatHistResultMessage;
+import chat.messages.resultMessages.ChatListResultMessage;
+import chat.messages.resultMessages.ErrorMessage;
+import chat.messages.resultMessages.InfoResultMessage;
 import chat.server.store.MessageStore;
 import chat.server.store.UserStore;
-import chat.server.store.UserStoreImpl;
+import chat.server.store.impls.UserStoreImpl;
 
 import java.io.IOException;
+import java.util.List;
 
 public class CommandHandler {
 
     private UserStore userStore;
     private MessageStore messageStore;
+    private List<Session> sessions;
 
-    public CommandHandler (UserStore userStore, MessageStore messageStore){
+    private Session session;
+
+    public CommandHandler(UserStore userStore, MessageStore messageStore) {
         this.userStore = userStore;
         this.messageStore = messageStore;
     }
 
-    public void execute(Session session, Message message){
+    public CommandHandler(UserStore userStore, MessageStore messageStore, Session session, List<Session> sessions) {
+        this.userStore = userStore;
+        this.messageStore = messageStore;
+        this.sessions = sessions;
+        this.session = session;
+    }
+
+    public void setSessions(List<Session> sessions) {
+        this.sessions = sessions;
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
+    }
+
+    public void execute(Message message) {
         switch (message.getMessageType()) {
 
-            case MSG_LOGIN:
+            case MSG_LOGIN: {
 
+                // можно свернуть в вызов одной функции
                 LoginMessage loginMessage = (LoginMessage) message;
                 Message answerMessage = null;
 
@@ -44,33 +69,96 @@ public class CommandHandler {
                 }
 
                 break;
+            }
 
-            case MSG_TEXT:
-                // достать текст, отправить в чат
-                break;
+            case MSG_TEXT: {
+                TextMessage textMessage = (TextMessage) message;
 
-            case MSG_INFO:
-                break;
+                List<User> usersInChat = userStore.getUsersInChat(textMessage.getChatId());
+                sendToUsers(usersInChat, textMessage);
 
-            case MSG_CHAT_LIST:
                 break;
+            }
 
-            case MSG_CHAT_CREATE:
-                break;
+            case MSG_INFO: {
+                InfoMessage infoMessage = (InfoMessage) message;
+                User user = userStore.getUserById(infoMessage.getUserId());
 
-            case MSG_CHAT_HIST:
-                break;
 
-            case MSG_STATUS:
-                break;
+                InfoResultMessage result = new InfoResultMessage(user.getName(), user.getId());
 
-            case MSG_CHAT_LIST_RESULT:
+                // TODO читать тяжело
+                try {
+                    session.send(result);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
-            case MSG_CHAT_HIST_RESULT:
+            }
+
+            case MSG_CHAT_LIST: {
+//                только для залогиненных пользователей
+                ChatListMessage chatListMessage = (ChatListMessage) message;
+                User user = userStore.getUserById(chatListMessage.getUserId());
+
+                ChatListResultMessage result = new ChatListResultMessage(messageStore.getChatsByUserId(user.getId()));
+
+                try {
+                    session.send(result);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 break;
-            case MSG_INFO_RESULT:
+            }
+
+            case MSG_CHAT_CREATE: {
+                ChatCreateMessage chatCreateMessage = (ChatCreateMessage) message;
+
+                Chat chat = messageStore.addChat(chatCreateMessage.getUsersId());
+                Integer chatId = chat.getId();
+
+                List<User> usersInChat = chat.getUsers();
+                TextMessage notification = new TextMessage(chatId, "Вас добавили в чат с id = " + chatId);
+                sendToUsers(usersInChat, notification);
+            }
+            break;
+
+            case MSG_CHAT_HIST: {
+                ChatHistMessage chatHistMessage = (ChatHistMessage) message;
+                ChatHistResultMessage result =
+                        new ChatHistResultMessage(messageStore.getMessagesFromChat(chatHistMessage.getChatId()));
+                try {
+                    session.send(result);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 break;
+            }
+
+
         }
 
+    }
+
+    private void sendToUsers(List<User> users, Message message) {
+        for (User user : users) {
+            try {
+                getSessionOfUser(user).send(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    private Session getSessionOfUser(User user){
+        for (Session session : sessions) {
+            if (session.getUser().equals(user)){
+                return session;
+            }
+        }
+        return null;
     }
 }

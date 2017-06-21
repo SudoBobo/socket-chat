@@ -6,6 +6,7 @@ public class ChatHistMessage extends Message {
     public ChatHistMessage(){}
 
     public ChatHistMessage(Integer chatId){
+        this.messageType = MessageType.MSG_CHAT_HIST;
         this.chatId = chatId;
     }
 

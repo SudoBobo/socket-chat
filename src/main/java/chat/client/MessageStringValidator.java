@@ -47,7 +47,6 @@ class MessageStringValidator {
 
     private boolean isLoginArgsValid(String[] tokens) {
         return (tokens.length == 2);
-        // TODO: добавить проверку на размер
     }
 
 

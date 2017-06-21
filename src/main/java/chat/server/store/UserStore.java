@@ -2,6 +2,9 @@ package chat.server.store;
 
 
 import chat.User;
+import chat.server.store.impls.UserStoreImpl;
+
+import java.util.List;
 
 public interface UserStore {
     /**
@@ -28,4 +31,6 @@ public interface UserStore {
      * return null if user not found
      */
     User getUserById(Long id);
+
+    List<User> getUsersInChat(Integer chatId);
 }

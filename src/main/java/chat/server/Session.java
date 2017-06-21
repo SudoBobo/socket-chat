@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.List;
 
 class Session implements Runnable {
 
@@ -17,16 +18,26 @@ class Session implements Runnable {
     private Socket socket;
     private Gson gson;
 
+    private List<Session> sessions;
+
     private ObjectInputStream in;
     private ObjectOutputStream out;
 
     final static public Logger log = Logger.getLogger(Session.class);
 
 
-    public Session(Socket socket, CommandHandler commandHandler) {
+    public Session(Socket socket, CommandHandler commandHandler, List<Session> sessions) {
+        this.sessions = sessions;
+        sessions.add(this);
+
+
+
         currentUser = null;
         this.socket = socket;
         this.commandHandler = commandHandler;
+
+        commandHandler.setSession(this);
+        commandHandler.setSessions(sessions);
 
         gson = new GsonBuilder().registerTypeAdapter(Message.class, new MessageDeserializer()).create();
 
@@ -81,7 +92,7 @@ class Session implements Runnable {
     }
 
     public void onMessage(Message message) {
-        commandHandler.execute(this, message);
+        commandHandler.execute(message);
     }
 
     public void setUser(User user){
@@ -103,6 +114,9 @@ class Session implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    public List<Session> getSessions() {
+        return sessions;
     }
 }

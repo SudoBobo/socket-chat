@@ -6,6 +6,7 @@ public class ChatListMessage extends Message {
     public ChatListMessage(){}
 
     public ChatListMessage(Long userId){
+        this.messageType = MessageType.MSG_CHAT_LIST;
         this.userId = userId;
     }
 

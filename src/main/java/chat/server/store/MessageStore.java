@@ -1,39 +1,23 @@
 package chat.server.store;
 
+import chat.Chat;
 import chat.messages.Message;
+import chat.messages.TextMessage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public interface MessageStore {
-    /**
-     * получаем список ид пользователей заданного чата
-     */
-    List<Long> getChatsByUserId(Long userId);
+    ArrayList<Integer> getChatsByUserId(Integer userId);
 
-    /**
-     * получить информацию о чате
-     */
-    //Chat getChatById(Long chatId);
+    ArrayList<TextMessage> getMessagesFromChat(Integer chatId);
 
-    /**
-     * Список сообщений из чата
-     */
-    List<Long> getMessagesFromChat(Long chatId);
+    Message getMessageById(Integer messageId);
 
-    /**
-     * Получить информацию о сообщении
-     */
-    Message getMessageById(Long messageId);
+    void addMessage(Integer chatId, Message message);
 
-    /**
-     * Добавить сообщение в чат
-     */
-    void addMessage(Long chatId, Message message);
+    void addUserToChat(Integer userId, Integer chatId);
 
-    /**
-     * Добавить пользователя к чату
-     */
-    void addUserToChat(Long userId, Long chatId);
-
+    Chat addChat(List<Long> usersId);
 }

@@ -15,6 +15,9 @@ class Client implements Runnable {
 
     private final static String address = "127.0.0.1";
 
+    // set after authorisation
+    private Long id;
+
     private ObjectInputStream in;
     private ObjectOutputStream out;
 
@@ -78,8 +81,7 @@ class Client implements Runnable {
 
                     if (messageStringValidator.isValid(messageString)) {
                         // TODO make it
-                        Long myId = 666L;
-                        Message message = messageFactory.createMessage(messageString, myId);
+                        Message message = messageFactory.createMessage(messageString, id);
                         send(message);
                     } else {
                         System.out.println("Sorry, your input is wrong. MessageType /help for list of valid commands");
@@ -129,5 +131,9 @@ class Client implements Runnable {
 
         log.info("Принято сообщение : " + message.getMessageType());
         commandHandler.execute(this, message);
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

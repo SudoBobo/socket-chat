@@ -1,6 +1,6 @@
 import chat.server.store.ConnectionPool;
 import chat.server.store.UserStore;
-import chat.server.store.UserStoreImpl;
+import chat.server.store.impls.UserStoreImpl;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
