@@ -7,6 +7,7 @@ import chat.server.store.UserStore;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class UserStoreImpl implements UserStore {
     private ConnectionPool connectionPool;
@@ -56,6 +57,11 @@ public class UserStoreImpl implements UserStore {
 
     @Override
     public User getUserById(Long id) {
+        return null;
+    }
+
+    @Override
+    public List<User> getUsersInChat(Integer chatId) {
         return null;
     }
 

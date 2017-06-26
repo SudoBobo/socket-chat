@@ -47,6 +47,7 @@ public class CommandHandler {
 
             case MSG_LOGIN: {
 
+                // TODO: 21.06.17 добавить проверки на то, авторизован ли пользователь
                 // можно свернуть в вызов одной функции
                 LoginMessage loginMessage = (LoginMessage) message;
                 Message answerMessage = null;
@@ -115,7 +116,7 @@ public class CommandHandler {
             case MSG_CHAT_CREATE: {
                 ChatCreateMessage chatCreateMessage = (ChatCreateMessage) message;
 
-                Chat chat = messageStore.addChat(chatCreateMessage.getUsersId());
+                Chat chat = messageStore.addChat(chatCreateMessage.getUsersId(), "DICK");
                 Integer chatId = chat.getId();
 
                 List<User> usersInChat = chat.getUsers();
@@ -127,7 +128,7 @@ public class CommandHandler {
             case MSG_CHAT_HIST: {
                 ChatHistMessage chatHistMessage = (ChatHistMessage) message;
                 ChatHistResultMessage result =
-                        new ChatHistResultMessage(messageStore.getMessagesFromChat(chatHistMessage.getChatId()));
+                        new ChatHistResultMessage(messageStore.getMessagesFromChat(chatHistMessage.getChatId()), chatHistMessage.getChatId());
                 try {
                     session.send(result);
                 } catch (IOException e) {

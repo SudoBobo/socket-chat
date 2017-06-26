@@ -19,5 +19,5 @@ public interface MessageStore {
 
     void addUserToChat(Integer userId, Integer chatId);
 
-    Chat addChat(List<Long> usersId);
+    Chat addChat(List<Long> usersId, String title);
 }
