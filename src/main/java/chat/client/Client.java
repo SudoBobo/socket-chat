@@ -100,7 +100,6 @@ class Client implements Runnable {
                 try {
                     {
                         String answerJson = (String) in.readObject();
-                        System.out.println(answerJson);
                         Message answer = gson.fromJson(answerJson, Message.class);
                         onMessage(answer);
                     }
@@ -123,7 +122,7 @@ class Client implements Runnable {
         out.writeObject(messageJson);
         out.flush();
 
-        log.info("Отправлено сообщение : " + message.getMessageType());
+        log.debug("Отправлено сообщение : " + message.getMessageType());
 
     }
 

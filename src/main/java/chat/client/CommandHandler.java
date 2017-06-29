@@ -7,7 +7,6 @@ import chat.messages.Message;
    class CommandHandler {
 
     public void execute(Client client, Message message) {
-        System.out.println(message.getMessageType().toString());
 
         switch (message.getMessageType()) {
             case MSG_LOGIN_RESULT:

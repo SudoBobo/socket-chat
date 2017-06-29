@@ -62,11 +62,10 @@ class Session implements Runnable {
                 try {
                     messageJson = (String) in.readObject();
                     Message message = gson.fromJson(messageJson, Message.class);
-                    System.out.println(message.getMessageType().toString());
                     onMessage(message);
 
                 } catch (EOFException  e){
-                    log.info("Пользователь закрыл соединение");
+                    log.debug("Пользователь закрыл соединение");
                     toProceed = false;
                     this.close();
                 }
@@ -84,10 +83,8 @@ class Session implements Runnable {
     }
 
     public void send(Message message) throws IOException {
-        System.out.println(message);
         String messageJson = gson.toJson(message, message.getClass());
         out.writeObject(messageJson);
-        System.out.println(messageJson);
         out.flush();
     }
 

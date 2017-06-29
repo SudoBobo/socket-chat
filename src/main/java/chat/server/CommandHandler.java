@@ -45,12 +45,11 @@ public class CommandHandler {
     }
 
     public void execute(Message message) {
-        session.log.info("Получено сообщение " + message.getMessageType());
+        session.log.debug("Получено сообщение " + message.getMessageType());
         switch (message.getMessageType()) {
 
             case MSG_LOGIN: {
 
-                // TODO: 21.06.17 добавить проверки на то, авторизован ли пользователь
                 // можно свернуть в вызов одной функции
                 LoginMessage loginMessage = (LoginMessage) message;
                 Message answerMessage = null;
@@ -167,11 +166,11 @@ public class CommandHandler {
                     chat = messageStore.addChat(chatCreateMessage.getUsersId(), chatCreateMessage.getChatTitle());
                 } catch (MessageStoreImpl.ChatExistsException e) {
                     try {
-                        session.send(new ErrorMessage("Чат с названием " + chatCreateMessage.getChatTitle() + "уже существует!"));
+                        session.send(new ErrorMessage("Чат с названием " + chatCreateMessage.getChatTitle() + " уже существует!"));
+                        break;
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
-                    break;
                 }
 
 
@@ -182,7 +181,7 @@ public class CommandHandler {
                     usersInChat.add(userStore.getUserById(id));
                 }
                 TextMessage notification = new TextMessage(chatCreateMessage.getChatTitle(),
-                        "Вас добавили в чат с id = " + chatCreateMessage.getChatTitle());
+                        "Вас добавили в чат " + chatCreateMessage.getChatTitle());
 
                 sendToUsers(usersInChat, notification);
             }
