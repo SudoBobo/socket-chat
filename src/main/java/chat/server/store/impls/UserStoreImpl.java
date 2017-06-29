@@ -13,8 +13,7 @@ import java.util.List;
 public class UserStoreImpl implements UserStore {
     private ConnectionPool connectionPool;
 
-    public static final String SELECT_USER = "SELECT * FROM users WHERE login=? and password=?";
-    public static final String SELECT_USER_BY_ID = "SELECT * FROM user WHERE ID=?";
+    public static final String SELECT_USER = "SELECT login, password, id FROM users WHERE login=? and password=?";
 
     public static final String SELECT_USER_IN_CHAT = "SELECT users.id, users.login, users.password\n" +
             "FROM users\n" +
@@ -48,7 +47,7 @@ public class UserStoreImpl implements UserStore {
 
             ResultSet rs = preparedStatement.executeQuery();
             if (rs.next()) {
-                user = new User(rs.getString(3), rs.getString(4), rs.getInt(2));
+                user = new User(rs.getString(1), rs.getString(2), rs.getInt(3));
             } else {
                 throw new NoSuchUserException(new Throwable("There is no user " + login));
             }

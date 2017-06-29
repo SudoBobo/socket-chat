@@ -47,7 +47,7 @@ class ClientMessageFactory {
                 String [] usersSeparated = usersIdString.split(",");
 
                 for (String userString : usersSeparated){
-                    usersId.add(Long.getLong(userString));
+                    usersId.add(Long.parseLong(userString));
                 }
 
                 message = new ChatCreateMessage(usersId, tokens[2]);
