@@ -23,7 +23,7 @@ import chat.messages.Message;
             }
             case MSG_CHAT_HIST_RESULT: {
                 ChatHistResultMessage answer = (ChatHistResultMessage) message;
-                System.out.println("Полная история чата с id = " + answer.getChatId());
+                System.out.println("Полная история чата = " + answer.getChatTitle());
                 for (TextMessage textMessage : answer.getMessages()){
                     printTextMessage(textMessage);
                 }
@@ -49,7 +49,7 @@ import chat.messages.Message;
     }
 
     private void printTextMessage(TextMessage textMessage){
-        System.out.println("chat " + textMessage.getChatId() + ", time " + textMessage.getTime() +
+        System.out.println("chat " + textMessage.getChatTitle() + ", time " + textMessage.getTime() +
                 " " + textMessage.getText());
     }
 }

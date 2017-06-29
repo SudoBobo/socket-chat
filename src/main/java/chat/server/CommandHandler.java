@@ -9,6 +9,7 @@ import chat.messages.resultMessages.ErrorMessage;
 import chat.messages.resultMessages.InfoResultMessage;
 import chat.server.store.MessageStore;
 import chat.server.store.UserStore;
+import chat.server.store.impls.MessageStoreImpl;
 import chat.server.store.impls.UserStoreImpl;
 
 import java.io.IOException;
@@ -43,6 +44,7 @@ public class CommandHandler {
     }
 
     public void execute(Message message) {
+        session.log.info("Получено сообщение " + message.getMessageType());
         switch (message.getMessageType()) {
 
             case MSG_LOGIN: {
@@ -58,7 +60,7 @@ public class CommandHandler {
                     answerMessage = new InfoResultMessage(user.getName(), user.getId());
 
                 } catch (UserStoreImpl.NoSuchUserException e) {
-                    session.log.info("fine");
+
                     answerMessage = new ErrorMessage("Такого пользователя не существует");
                 }
 
@@ -75,7 +77,7 @@ public class CommandHandler {
             case MSG_TEXT: {
                 TextMessage textMessage = (TextMessage) message;
 
-                List<User> usersInChat = userStore.getUsersInChat(textMessage.getChatId());
+                List<User> usersInChat = userStore.getUsersInChat(textMessage.getChatTitle());
                 sendToUsers(usersInChat, textMessage);
 
                 break;
@@ -102,7 +104,8 @@ public class CommandHandler {
                 ChatListMessage chatListMessage = (ChatListMessage) message;
                 User user = userStore.getUserById(chatListMessage.getUserId());
 
-                ChatListResultMessage result = new ChatListResultMessage(messageStore.getChatsByUserId(user.getId()));
+//                ChatListResultMessage result = new ChatListResultMessage(messageStore.getChatsByUserId(user.getId()));
+                ChatListResultMessage result = new ChatListResultMessage();
 
                 try {
                     session.send(result);
@@ -115,20 +118,33 @@ public class CommandHandler {
 
             case MSG_CHAT_CREATE: {
                 ChatCreateMessage chatCreateMessage = (ChatCreateMessage) message;
+                Chat chat = null;
 
-                Chat chat = messageStore.addChat(chatCreateMessage.getUsersId(), "DICK");
-                Integer chatId = chat.getId();
+                try {
+                    chat = messageStore.addChat(chatCreateMessage.getUsersId(), chatCreateMessage.getChatTitle());
+                } catch (MessageStoreImpl.ChatExistsException e) {
+                    try {
+                        session.send(new ErrorMessage("Чат с названием " + chatCreateMessage.getChatTitle() + "уже существует!"));
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    break;
+                }
 
                 List<User> usersInChat = chat.getUsers();
-                TextMessage notification = new TextMessage(chatId, "Вас добавили в чат с id = " + chatId);
+                TextMessage notification = new TextMessage(chatCreateMessage.getChatTitle(),
+                        "Вас добавили в чат с id = " + chatCreateMessage.getChatTitle());
+
                 sendToUsers(usersInChat, notification);
             }
             break;
 
             case MSG_CHAT_HIST: {
                 ChatHistMessage chatHistMessage = (ChatHistMessage) message;
+                String title = chatHistMessage.getChatTitle();
+
                 ChatHistResultMessage result =
-                        new ChatHistResultMessage(messageStore.getMessagesFromChat(chatHistMessage.getChatId()), chatHistMessage.getChatId());
+                        new ChatHistResultMessage(messageStore.getMessagesFromChat(title), title);
                 try {
                     session.send(result);
                 } catch (IOException e) {
@@ -146,7 +162,10 @@ public class CommandHandler {
     private void sendToUsers(List<User> users, Message message) {
         for (User user : users) {
             try {
-                getSessionOfUser(user).send(message);
+                Session session = getSessionOfUser(user);
+                if (session != null) {
+                    session.send(message);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -154,9 +173,9 @@ public class CommandHandler {
 
     }
 
-    private Session getSessionOfUser(User user){
+    private Session getSessionOfUser(User user) {
         for (Session session : sessions) {
-            if (session.getUser().equals(user)){
+            if (session.getUser().equals(user)) {
                 return session;
             }
         }

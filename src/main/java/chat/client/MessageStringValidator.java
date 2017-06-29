@@ -49,14 +49,14 @@ class MessageStringValidator {
         return (tokens.length == 2);
     }
 
-
     private boolean isInfoArgsValid(String[] tokens) {
         return (tokens.length < 2);
     }
 
     private boolean isChatListArgsValid(String[] tokens) { return (tokens.length == 1); }
 
-    private boolean isChatCreateArgsValid(String[] tokens) { return (tokens.length == 1); }
+    // /chat_create 1,2,3 boboChat
+    private boolean isChatCreateArgsValid(String[] tokens) { return (tokens.length == 2); }
 
     private boolean isChatHistArgsValid(String[] tokens) { return (tokens.length == 1) ;}
 

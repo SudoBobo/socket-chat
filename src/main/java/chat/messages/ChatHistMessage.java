@@ -1,16 +1,16 @@
 package chat.messages;
 
 public class ChatHistMessage extends Message {
-    private Integer chatId;
+    private String chatTitle;
 
     public ChatHistMessage(){}
 
-    public ChatHistMessage(Integer chatId){
+    public ChatHistMessage(String chatTitle){
         this.messageType = MessageType.MSG_CHAT_HIST;
-        this.chatId = chatId;
+        this.chatTitle = chatTitle;
     }
 
-    public Integer getChatId() {
-        return chatId;
+    public String getChatTitle() {
+        return chatTitle;
     }
 }

@@ -24,9 +24,9 @@ class ClientMessageFactory {
                 String text = "";
                 // TODO замени на regexp
                 for (int i = 2; i < tokens.length; i++){
-                    text += tokens[i];
+                    text += tokens[i] + " ";
                 }
-                message = new TextMessage(Integer.getInteger(tokens[1]), text);
+                message = new TextMessage(tokens[1], text);
                 break;
 
             case "/info":
@@ -40,15 +40,22 @@ class ClientMessageFactory {
                 break;
 
             case "/chat_create":
+                // chat_create 1,2,3 boboChat
+
                 List<Long> usersId = new LinkedList<>();
-                for (int i = 1; i < tokens.length; i++){
-                    usersId.add(Long.getLong(tokens[i]));
+                String usersIdString = tokens[1];
+                String [] usersSeparated = usersIdString.split(",");
+
+                for (String userString : usersSeparated){
+                    usersId.add(Long.getLong(userString));
                 }
-                message = new ChatCreateMessage(usersId);
+
+                message = new ChatCreateMessage(usersId, tokens[2]);
                 break;
 
             case "/chat_hist":
-                message = new ChatHistMessage(Integer.getInteger(tokens[1]));
+                // /chat_hist boboChat
+                message = new ChatHistMessage(tokens[1]);
                 break;
         }
 

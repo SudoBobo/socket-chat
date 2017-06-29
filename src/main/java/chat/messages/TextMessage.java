@@ -5,14 +5,21 @@ import java.util.Date;
 public class TextMessage extends Message {
     private String text;
     private Date time;
-    private Integer chatId;
+    private String chatTitle;
 
     public TextMessage(){}
 
-    public TextMessage(Integer chatId, String text){
+    public TextMessage(String chatTitle, String text){
         this.messageType = MessageType.MSG_TEXT;
         time = new Date();
-        this.chatId = chatId;
+        this.chatTitle = chatTitle;
+        this.text = text;
+    }
+
+    public TextMessage(String chatTitle, String text, java.sql.Date date){
+        this.messageType = MessageType.MSG_TEXT;
+        this.time = date;
+        this.chatTitle = chatTitle;
         this.text = text;
     }
 
@@ -20,8 +27,8 @@ public class TextMessage extends Message {
         return text;
     }
 
-    public Integer getChatId() {
-        return chatId;
+    public String getChatTitle() {
+        return chatTitle;
     }
 
     public Date getTime() {

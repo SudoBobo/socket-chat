@@ -32,5 +32,5 @@ public interface UserStore {
      */
     User getUserById(Long id);
 
-    List<User> getUsersInChat(Integer chatId);
+    List<User> getUsersInChat(String chatTitle);
 }

@@ -7,21 +7,21 @@ import java.util.ArrayList;
 
 public class ChatHistResultMessage extends Message {
     private ArrayList<TextMessage> messages;
-    private Integer chatId;
+    private String chatTitle;
 
     public ChatHistResultMessage() {
     }
 
-    public ChatHistResultMessage(ArrayList<TextMessage> messages, Integer chatId) {
+    public ChatHistResultMessage(ArrayList<TextMessage> messages, String chatTitle) {
         this.messages = messages;
-        this.chatId = chatId;
+        this.chatTitle = chatTitle;
     }
 
     public ArrayList<TextMessage> getMessages() {
         return messages;
     }
 
-    public Integer getChatId() {
-        return chatId;
+    public String getChatTitle() {
+        return chatTitle;
     }
 }

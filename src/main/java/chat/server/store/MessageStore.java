@@ -1,23 +1,20 @@
 package chat.server.store;
 
 import chat.Chat;
-import chat.messages.Message;
 import chat.messages.TextMessage;
+import chat.server.store.impls.MessageStoreImpl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 public interface MessageStore {
-    ArrayList<Integer> getChatsByUserId(Integer userId);
 
-    ArrayList<TextMessage> getMessagesFromChat(Integer chatId);
+    ArrayList<TextMessage> getMessagesFromChat(String chatTitle);
 
-    Message getMessageById(Integer messageId);
+    void addMessage(String chatTitle, TextMessage message);
 
-    void addMessage(Integer chatId, Message message);
+    void addUserToChat(Integer userId, String chatTitle);
 
-    void addUserToChat(Integer userId, Integer chatId);
-
-    Chat addChat(List<Long> usersId, String title);
+    Chat addChat(List<Long> usersId, String title) throws MessageStoreImpl.ChatExistsException;
 }
