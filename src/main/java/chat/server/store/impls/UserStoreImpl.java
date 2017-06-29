@@ -75,7 +75,7 @@ public class UserStoreImpl implements UserStore {
             getUsersPS.setInt(1, chatId);
             ResultSet resultSet = getUsersPS.executeQuery();
 
-            if (resultSet.next()) {
+             while (resultSet.next()) {
                 users.add(new User(resultSet.getString(2), resultSet.getString(3), resultSet.getInt(1)));
             }
 

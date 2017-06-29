@@ -16,7 +16,7 @@ public class TextMessage extends Message {
         this.text = text;
     }
 
-    public TextMessage(String chatTitle, String text, java.sql.Date date){
+    public TextMessage(String chatTitle, String text, Date date){
         this.messageType = MessageType.MSG_TEXT;
         this.time = date;
         this.chatTitle = chatTitle;

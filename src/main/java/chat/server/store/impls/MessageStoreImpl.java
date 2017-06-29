@@ -22,7 +22,7 @@ public class MessageStoreImpl implements MessageStore {
     public static final String ADD_MESSAGE = "INSERT INTO messages (chat_id, text, time) VALUES (?, ?, ?);";
 
     public static final String GET_CHAT_ID = "SELECT id FROM chats WHERE title=?;";
-    public static final String GET_MESSAGES = "SELECT text, time FROM messages WHERE id = ?;";
+    public static final String GET_MESSAGES = "SELECT text, time FROM messages WHERE chat_id = ?;";
 
     public MessageStoreImpl(ConnectionPool connectionPool) {
         this.connectionPool = connectionPool;
@@ -37,8 +37,8 @@ public class MessageStoreImpl implements MessageStore {
             getMessagesPS.setInt(1, chatId);
             ResultSet rs = getMessagesPS.executeQuery();
 
-            if (rs.next()) {
-                messages.add(new TextMessage(chatTitle, rs.getString(1),  rs.getDate(2)));
+            while (rs.next()) {
+                messages.add(new TextMessage(chatTitle, rs.getString(1),  new java.util.Date()));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -53,7 +53,7 @@ public class MessageStoreImpl implements MessageStore {
         try (PreparedStatement addMessagePS = connectionPool.retrieve().prepareStatement(ADD_MESSAGE)){
             addMessagePS.setInt(1, chatId);
             addMessagePS.setString(2, message.getText());
-            addMessagePS.setDate(3, new Date(message.getTime().getDate()));
+            addMessagePS.setDate(3, new Date(message.getTime().getTime()));
             int rs = addMessagePS.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -118,7 +118,9 @@ public class MessageStoreImpl implements MessageStore {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+
+
+        return new Chat(chatTitle, chatId, usersId);
     }
 
     public class ChatExistsException extends Exception {

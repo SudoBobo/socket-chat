@@ -1,26 +1,30 @@
 package chat;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Chat {
     private Integer id;
-    private ArrayList<User> users;
+    private String title;
+    private List<Long> usersId;
 
     public Chat() {
     }
 
-    public Chat(Integer id, ArrayList<User> users) {
+    public Chat(String title, Integer id, List<Long> usersId) {
         this.id = id;
-        this.users = users;
+        this.usersId = usersId;
+        this.title = title;
     }
 
     public Integer getId() {
         return id;
     }
 
-    public ArrayList<User> getUsers() {
-        return users;
+    public List<Long> getUsersId() {
+        return usersId;
     }
 
-
+    public String getTitle() {
+        return title;
+    }
 }

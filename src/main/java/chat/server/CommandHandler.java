@@ -13,6 +13,7 @@ import chat.server.store.impls.MessageStoreImpl;
 import chat.server.store.impls.UserStoreImpl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommandHandler {
@@ -75,15 +76,37 @@ public class CommandHandler {
             }
 
             case MSG_TEXT: {
+
+                if (!session.isAuthorized()){
+                    try {
+                        session.send(new ErrorMessage(" Вы не авторизованы!"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+
                 TextMessage textMessage = (TextMessage) message;
+                messageStore.addMessage(textMessage.getChatTitle(), textMessage);
 
                 List<User> usersInChat = userStore.getUsersInChat(textMessage.getChatTitle());
+
                 sendToUsers(usersInChat, textMessage);
 
                 break;
             }
 
             case MSG_INFO: {
+
+                if (!session.isAuthorized()){
+                    try {
+                        session.send(new ErrorMessage(" Вы не авторизованы!"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+
                 InfoMessage infoMessage = (InfoMessage) message;
                 User user = userStore.getUserById(infoMessage.getUserId());
 
@@ -100,6 +123,16 @@ public class CommandHandler {
             }
 
             case MSG_CHAT_LIST: {
+
+                if (!session.isAuthorized()){
+                    try {
+                        session.send(new ErrorMessage(" Вы не авторизованы!"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+
 //                только для залогиненных пользователей
                 ChatListMessage chatListMessage = (ChatListMessage) message;
                 User user = userStore.getUserById(chatListMessage.getUserId());
@@ -117,6 +150,16 @@ public class CommandHandler {
             }
 
             case MSG_CHAT_CREATE: {
+
+                if (!session.isAuthorized()){
+                    try {
+                        session.send(new ErrorMessage(" Вы не авторизованы!"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+
                 ChatCreateMessage chatCreateMessage = (ChatCreateMessage) message;
                 Chat chat = null;
 
@@ -131,7 +174,13 @@ public class CommandHandler {
                     break;
                 }
 
-                List<User> usersInChat = chat.getUsers();
+
+                List<Long> usersInChatIds = chat.getUsersId();
+                List<User> usersInChat = new ArrayList<>();
+
+                for (Long id : usersInChatIds){
+                    usersInChat.add(userStore.getUserById(id));
+                }
                 TextMessage notification = new TextMessage(chatCreateMessage.getChatTitle(),
                         "Вас добавили в чат с id = " + chatCreateMessage.getChatTitle());
 
@@ -140,6 +189,16 @@ public class CommandHandler {
             break;
 
             case MSG_CHAT_HIST: {
+
+                if (!session.isAuthorized()){
+                    try {
+                        session.send(new ErrorMessage(" Вы не авторизованы!"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+
                 ChatHistMessage chatHistMessage = (ChatHistMessage) message;
                 String title = chatHistMessage.getChatTitle();
 
