@@ -66,6 +66,6 @@ class MessageStringValidator {
 
 
     public void fixMethod(){
-
+        // do fix
     }
 }
