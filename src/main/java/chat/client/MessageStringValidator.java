@@ -64,4 +64,8 @@ class MessageStringValidator {
         return (tokens.length >= 1);
     }
 
+
+    public void fixMethod(){
+
+    }
 }
